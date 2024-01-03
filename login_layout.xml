@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/background">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:id="@+id/img_login"
+        android:src="@drawable/login_picture"
+        ></ImageView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/welcome_login"
+        android:layout_gravity="center"
+        android:layout_margin="25dp"
+        android:textSize="20dp"></TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/user_login"
+            android:textSize="20dp"
+            android:layout_marginRight="10dp"
+            ></TextView>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="30dp"
+            android:inputType="text"
+            android:id="@+id/edt_user_login"
+            android:hint="Enter"></EditText>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="10dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pass_login"
+            android:textSize="20dp"
+            android:layout_marginRight="10dp"
+            ></TextView>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="30dp"
+            android:inputType="textPassword"
+            android:id="@+id/edt_pass_login"
+            android:hint="Enter"></EditText>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:text="@string/signin_login"
+            android:id="@+id/bt_signin_Login"
+            android:textSize="30dp"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:clickable="true"></TextView>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="@string/login_login"
+            android:textSize="30dp"
+            android:backgroundTint="@color/bt_login"
+            android:id="@+id/bt_login_login"
+            android:layout_gravity="center"
+            >
+        </com.google.android.material.button.MaterialButton>
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
