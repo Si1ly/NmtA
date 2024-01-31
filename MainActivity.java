@@ -1,60 +1,137 @@
-package com.example.nmta.activity;
+package com.example.testvideo_1;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager2.widget.ViewPager2;
+import androidx.media3.common.MediaItem;
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.exoplayer.source.MediaSource;
+import androidx.media3.ui.PlayerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.FragmentManager;
+import android.app.Activity;
+import android.content.Intent;
+import android.media.browse.MediaBrowser;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.widget.Button;
+import android.widget.Toast;
 
-import com.example.nmta.R;
-import com.example.nmta.adapter.PagerViewAdapter;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
+import com.example.testvideo_1.Api.ApiService;
+import com.example.testvideo_1.Api.Service;
+import com.example.testvideo_1.Data.VideoItem;
 
-public class MainActivity extends AppCompatActivity  {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-    private ViewPager2 viewPager2;
-    private BottomNavigationView bottomNavigationView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class MainActivity extends AppCompatActivity {
+    RecyclerView recyclerView;
+    ArrayList<Uri> listUrl = new ArrayList<>();
+    ArrayList<String> listUser = new ArrayList<>();
+    Button bt_add;
+
+
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.option_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.item_clear:
+                listUrl.clear();
+            case R.id.item_save:
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        viewPager2 = (ViewPager2) findViewById(R.id.viewPager_main);
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigator_main);
+        recyclerView = (RecyclerView) findViewById(R.id.recycleView);
+        bt_add = (Button) findViewById(R.id.bt_add);
 
-        PagerViewAdapter adapter = new PagerViewAdapter(this);
-        viewPager2.setAdapter(adapter);
-
-        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                switch (position){
-                    case 0:
-                        bottomNavigationView.getMenu().findItem(R.id.home_bottom).setChecked(true);
-                        break;
-                    case 1:
-                        bottomNavigationView.getMenu().findItem(R.id.add_bottom).setChecked(true);
-                        break;
-                }
-            }
+        bt_add.setOnClickListener(view -> {
+            Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+            someActivityResultLauncher.launch(i);
         });
-
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if(id == R.id.home_bottom){
-                viewPager2.setCurrentItem(0);
-            }
-            if(id == R.id.add_bottom){
-                viewPager2.setCurrentItem(1);
-            }
-            return true;
-        });
-
     }
+
+    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        Uri test_uri = data.getData();
+                        Intent i = new Intent(MainActivity.this,EnterUser.class);
+                        getDataResult.launch(i);
+                        Log.d("asdashgdkas",listUser.toString());
+//                        doSomeOperations(test_uri);
+                    }
+                }
+            });
+
+    private void doSomeOperations(Uri uri) {
+        listUrl.add(uri);
+        RecycleView_Adapter recycleViewAdapter = new RecycleView_Adapter(listUrl,this,listUser);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(recycleViewAdapter);
+    }
+
+    ActivityResultLauncher<Intent> getDataResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult o) {
+            if(o.getResultCode() == Activity.RESULT_OK){
+                String temp = o.getData().getData().toString();
+                listUser.add(temp);
+            }
+        }
+    });
+
+//    private void save_VideotoServer(){
+//        VideoItem videoItem = new VideoItem("testUri","testName");
+//
+//        ApiService apiService = new ApiService();
+//        Service service = apiService.getRetorfit().create(Service.class);
+//        service.savevideo(videoItem)
+//                .enqueue(new Callback<VideoItem>() {
+//                    @Override
+//                    public void onResponse(Call<VideoItem> call, Response<VideoItem> response) {
+//                        Toast.makeText(MainActivity.this, "Succeed!!", Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<VideoItem> call, Throwable t) {
+//                        Logger.getLogger(MainActivity.class.getName()).log(Level.SEVERE,"Get Errorrrr",t);
+//                    }
+//                });
+//    }
 }
