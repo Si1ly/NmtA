@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
             String email = edt_user.getText().toString();
             String passWord = edt_pass.getText().toString();
             firebaseAccount.LoginWithEmailandPassword(email, passWord, LoginActivity.this);
-            firebaseAccount.getNameAccount(LoginActivity.this);
+//            firebaseAccount.getNameAccount(LoginActivity.this);
             Intent i = new Intent(LoginActivity.this,MainActivity.class);
             startActivity(i);
        });
